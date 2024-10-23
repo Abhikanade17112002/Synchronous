@@ -1,20 +1,21 @@
+const jwt = require('jsonwebtoken')
 const userModel = require("../models/user.model");
-const bcryptjs = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-// const cloudinary = require("../utiils/cloudinary");
-// const deleteServerSideFiles = require("../utiils/deleteServerSideFiles");
+const cloudinary = require("../utils/cloudinary");
+const deleteServerFile = require("../utils/deleteServerSideFiles");
+const {
+  hashPassword,
+  comparePassword,
+  verifyToken,
+  generateToken,
+} = require("../utils/auth");
 
 const handleUserSignUp = async (request, response) => {
   try {
-    const {username , email, password} = request.body;
+    const { username, email, password } = request.body;
 
-    console.log({ username , email, password});
-    
-    if (
-      !email ||
-      !username ||
-      !password 
-    ) {
+    console.log({ username, email, password });
+
+    if (!email || !username || !password) {
       return response.status(200).json({
         message: "please fill all the fields ",
         status: false,
@@ -30,22 +31,20 @@ const handleUserSignUp = async (request, response) => {
       });
     }
 
-    const hashedPassword = await bcryptjs.hash(password, 10);
+    const hashedPassword = await hashPassword(password);
 
-    const newUser = await userModel.create({email,
+    const newUser = await userModel.create({
+      email,
       username,
       password: hashedPassword,
     });
-    
 
     // sign JWT
     const tokenData = {
       userId: newUser._id,
       email: newUser.email,
     };
-    const signedToken = await jwt.sign(tokenData, process.env.JWT, {
-      expiresIn: "1d",
-    });
+    const signedToken = await generateToken(tokenData, process.env.JWT);
 
     if (!signedToken) {
       return response.status(500).json({
@@ -53,7 +52,6 @@ const handleUserSignUp = async (request, response) => {
         status: false,
       });
     }
-
 
     response
       .status(200)
@@ -83,8 +81,7 @@ const handleUserSignIn = async (request, response) => {
   try {
     const { email, password } = request.body;
 
-
-    if (!email || !password ) {
+    if (!email || !password) {
       return response.status(200).json({
         message: "please fill all the fields",
         status: false,
@@ -99,7 +96,7 @@ const handleUserSignIn = async (request, response) => {
       });
     }
 
-    const validPassword = await bcryptjs.compare(password, user.password);
+    const validPassword = await comparePassword(password, user.password);
     if (!validPassword) {
       return response.status(200).json({
         message: "incorrect email or password (user not found)",
@@ -111,9 +108,7 @@ const handleUserSignIn = async (request, response) => {
       email: user.email,
     };
 
-    const generatedToken = jwt.sign(tokenData,process.env.JWT, {
-      expiresIn: "1d",
-    });
+    const generatedToken = await generateToken(tokenData, process.env.JWT);
 
     return response
       .status(200)
@@ -132,7 +127,7 @@ const handleUserSignIn = async (request, response) => {
       });
   } catch (error) {
     console.log(error);
-    
+
     response.status(200).json({
       message: "something went wrong in sign in ",
       status: false,
@@ -142,8 +137,6 @@ const handleUserSignIn = async (request, response) => {
 
 const handleUserSignOut = async (request, response) => {
   try {
-   
-
     return response
       .status(200)
       .clearCookie("jwttoken", {
@@ -164,79 +157,147 @@ const handleUserSignOut = async (request, response) => {
   }
 };
 
-// const handleUserProfileUpdate = async (request, response) => {
-//   try {
-//     const { firstName, lastName, phoneNumber, bio, skills, email } =
-//       request.body;
-
-//     const profilePath = request?.files?.profilePic[0]?.path;
-//     const resumePath = request?.files?.resume[0]?.path;
-
-//     let profileURL = await cloudinary.uploader.upload(profilePath);
-//     let resumeURL = await cloudinary.uploader.upload(resumePath);
-//     profileURL.secure_url = profileURL.secure_url.replace(".pdf", ".jpg");
-//     resumeURL.secure_url = resumeURL.secure_url.replace(".pdf", ".jpg");
-
-//     // Check if all fields are provided
-//     if (!firstName || !lastName || !phoneNumber || !bio || !skills || !email) {
-//       return response.status(400).json({
-//         message: "Please fill all the fields",
-//         status: false,
-//       });
-//     }
-
-//     const skillsArray = skills?.split(",");
-//     const userId = request.userId;
-
-//     // Find the user by ID
-//     let user = await UserModel.findById(userId);
-//     if (!user) {
-//       return response.status(404).json({
-//         message: "User not found",
-//         status: false,
-//       });
-//     }
-
-//     const updateInfo = {};
-//     if (firstName) updateInfo.firstName = firstName;
-//     if (lastName) updateInfo.lastName = lastName;
-//     if (phoneNumber) updateInfo.phoneNumber = phoneNumber;
-//     updateInfo.profile = {};
-//     if (bio) updateInfo.profile.bio = bio;
-
-//     if (skillsArray.length > 0) updateInfo.profile.skills = skillsArray;
-//     if (email) updateInfo.email = email;
-//     if (profileURL) updateInfo.profile.profilePhoto = profileURL.secure_url;
-
-//     if (resumeURL) updateInfo.profile.resume = resumeURL.secure_url;
+const handleGetUserInfo = async (request , response ) =>{
+  try {
     
-//     deleteServerSideFiles(resumePath) ;
-//     deleteServerSideFiles(profilePath) ;
-//     // Update the user data using findByIdAndUpdate for cleaner updates
-//     const updatedUser = await UserModel.findByIdAndUpdate(
-//       userId,
-//       updateInfo,
-//       { new: true } // Return the updated user
-//     );
+    const checkExistingUser = await userModel.findOne({ _id:request.userId });
+    if (checkExistingUser) {
+      const tokenData = {
+        userId: checkExistingUser._id,
+        email: checkExistingUser.email,
+      }
+      const generatedToken = await generateToken(tokenData,process.env.JWT) ;
+      return response 
+      .status(200)
+      .cookie("jwttoken", generatedToken, {
+        maxAge: 1 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        sameSite: "strict",
+        secure: true,
+        path: "/",
+      })
+      .json({
+        message: "login successfull",
+        status: true,
+        token: generatedToken,
+        user:checkExistingUser,
+      });
+    } else {
+      response.status(200).clearCookie("jwttoken").json({
+        message: "user not found",
+        status: false,
+        user:null
+      })
+    }
+  } catch (error) {
+    console.log('====================================');
+    console.log("SOMETHING WENT WRONG IN GET USER INFO",error);
+    console.log('====================================');
+  }
+}
+const handleUserProfileUpdate = async (request, response) => {
+  try {
+    const { firstname, lastname, color } = request.body;
+    const profileImagePath = request?.file?.path;
+    // const resumePath = request?.files?.resume[0]?.path;
+    let profileURL ="";
+    if( profileImagePath)
+    {
+      profileURL = await cloudinary.uploader.upload(profileImagePath);
+    }
+    
+    
+
+    const userId = request.userId;
+
+    // Find the user by ID
+    let user = await userModel.findById(userId);
+    if (!user) {
+      return response.status(404).json({
+        message: "User not found",
+        status: false,
+      });
+    }
+
+    const updateInfo = {};
+    if (firstname) updateInfo.firstName = firstname;
+    if (lastname) updateInfo.lastName = lastname;
+    if (color === 0 || color ) updateInfo.color = color;
+    if( profileImagePath) {
+      if( profileURL ) updateInfo.profileimage = profileURL?.secure_url ;
+    }
+    else{
+       updateInfo.profileimage = null ;
+    }
+   
+    updateInfo.profilesetup = true ;
 
 
-//     return response.status(200).json({
-//       message: "User profile updated successfully",
-//       status: true,
-//       user: updatedUser,
-//     });
-//   } catch (error) {
-//     console.log("Error updating profile: ", error);
-//     return response.status(500).json({
-//       message: "Something went wrong while updating profile",
-//       status: false,
-//     });
-//   }
-// };
 
+    if( profileImagePath){
+      deleteServerFile(profileImagePath) ;
+    }
+    
+    // Update the user data using findByIdAndUpdate for cleaner updates
+    const updatedUser = await userModel.findByIdAndUpdate(
+      userId,
+      updateInfo,
+      { new: true } 
+    );
+
+    return response.status(200).json({
+      message: "User profile updated successfully",
+      status: true,
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.log("Error updating profile: ", error);
+    return response.status(500).json({
+      message: "Something went wrong while updating profile",
+      status: false,
+    });
+  }
+};
+
+const handleRemoveUserProfile = async (request,response)=>{
+  try {
+    const userId = request.userId;
+
+    // Find the user by ID
+    let user = await userModel.findById(userId);
+    if (!user) {
+      return response.status(404).json({
+        message: "User not found",
+        status: false,
+      });
+    }
+
+       const updateInfo = {};
+       updateInfo.profileimage = null ;
+
+    
+    // Update the user data using findByIdAndUpdate for cleaner updates
+    const updatedUser = await userModel.findByIdAndUpdate(
+      userId,
+      updateInfo,
+      { new: true } 
+    );
+
+    return response.status(200).json({
+      message: "User Profile Image Removed successfully",
+      status: true,
+      user: updatedUser,
+    });
+  } catch (error) {
+    
+  }
+}
 module.exports = {
   // export the functions to be used in other files
   handleUserSignUp,
   handleUserSignIn,
   handleUserSignOut,
+  handleGetUserInfo,
+  handleUserProfileUpdate,
+  handleRemoveUserProfile
 };

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose") ;
 
+
 const userSchema = new mongoose.Schema({
     firstname:{
         type:String,
@@ -27,6 +28,15 @@ const userSchema = new mongoose.Schema({
         type:String,
         required:true,
         unique:true
+    },
+    color:{
+        type:Number,
+        default:0,
+        
+    },
+    profileimage:{
+    type:String,
+    default:"",
     }
 },{timestamps:true}) ;
 

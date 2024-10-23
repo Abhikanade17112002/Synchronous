@@ -1,12 +1,15 @@
 import CustomInput from '@/components/CustomInput/CustomInput'
 import { Button } from '@/components/ui/button'
-import axios from 'axios'
-import React from 'react'
-import { Controller, useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { handleUserSignInAction } from '@/store/userSlice/userSlice'
+import React, { useState } from 'react'
+import {  useForm } from 'react-hook-form'
+import { useDispatch } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
-
 const SignInForm = ({setCurrentTab}) => {
+  const dispatch = useDispatch() ;
+  const navigate = useNavigate() ;
+  const [ submitting , setSubmitting ] = useState(false) ;
   const { register, handleSubmit, formState:{errors} } = useForm({
     defaultValues: {
       email: '',
@@ -18,29 +21,21 @@ const SignInForm = ({setCurrentTab}) => {
   
   const handleUserSignIn = async(data) =>{
     try {
-        console.log(data,"data");
-        
-      const response = await axios.post(`${import.meta.env.VITE_BASEURL}/auth/signin`,data,{
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        withCredentials:true 
-      }) ;
-
-      if( response.data.status)
-      {
-         toast.success(response.data.message) ;
-      }
-      else{
-        toast.success(response.data.message) ;
-      }
+      const response = await dispatch(handleUserSignInAction(data));
       console.log('====================================');
-      console.log(response,"response");
+      console.log(response,"Response");
       console.log('====================================');
+      if (response.payload.status) {
+        toast.success(response.payload.message);
+        setSubmitting(false);
+        navigate("/chat");
+      } else {
+        toast.error(response.payload.message);
+        setSubmitting(false);
+      }
     } catch (error) {
-      console.log('====================================');
-      console.log(error,"error");
-      console.log('====================================');
+      console.log(error);
+      setSubmitting(false);
     }
   } ;
   
@@ -85,7 +80,7 @@ const SignInForm = ({setCurrentTab}) => {
           })}
          />
          <div className="my-5 flex justify-center flex-col items-center">
-         <Button className="w-1/3"  type="submit" > Sign In </Button>
+         <Button className="w-1/3" disable={submitting}  type="submit" >{  submitting ? "submitting..." : "Sign In" }</Button>
          <div className="text-center my-5">
           <p className='text-[8px] font-bold text-zinc-700 ' > Dont have an account ? <span className='text-blue-700'><Link to="/auth"  onClick={()=>setCurrentTab("signup")}  > Sign Up </Link></span> </p>
          </div>
