@@ -9,7 +9,7 @@ router.post("/signin",handleUserSignIn) ;
 // Sign Up
 router.post("/signup",handleUserSignUp) ;
 // Sign Out
-router.get("/signout",handleUserSignOut) ;
+router.post("/signout",Authenticated,handleUserSignOut) ;
 
 
 router.get("/getinfo",Authenticated,handleGetUserInfo) ;

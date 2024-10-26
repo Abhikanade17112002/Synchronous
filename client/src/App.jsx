@@ -11,9 +11,6 @@ import { toast } from "sonner";
 import { getUserInfoAction } from "./store/userSlice/userSlice";
 
 export default function App() {
-  console.log('====================================');
-  console.log("sdsdsds");
-  console.log('====================================');
   const dispatch  = useDispatch() ;
   useEffect(()=>{
     fetchUser() ;
@@ -23,19 +20,17 @@ export default function App() {
   const fetchUser = async () =>{
     try {
         const response =  await dispatch(getUserInfoAction()) ;
-        console.log('====================================');
-        console.log(response,"main");
-        console.log('====================================');
     } catch (error) {
       
     }
   }
-  return (
+
+  return  (
     <BrowserRouter>
       <Routes>
         <Route path="/auth" element={<AuthRoutes><Auth/></AuthRoutes>} />
         <Route path="/profile" element={<AuthRoutes><Profile/></AuthRoutes>} />
-        <Route path="/chat" element={<AuthRoutes><PrivateRoutes><Chat/></PrivateRoutes></AuthRoutes>} />
+        <Route path="/chat" element={<PrivateRoutes><Chat/></PrivateRoutes>} />
         <Route path="*" element={<Navigate to="/auth" />} />
       </Routes>
     </BrowserRouter>
