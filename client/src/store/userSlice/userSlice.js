@@ -43,7 +43,7 @@ export const handleUserSignUpAction = createAsyncThunk("/auth/signup",async (for
 
 export const handleUserSignOutAction = createAsyncThunk("/auth/signout",async (formData) =>{
     try {
-        const response = await axios.post(`${import.meta.env.VITE_BASEURL}/auth/update`,formData,{
+        const response = await axios.post(`${import.meta.env.VITE_BASEURL}/auth/signout`,{},{
             headers: {
               'Content-Type': 'application/json',
             },
@@ -133,9 +133,7 @@ const userSlice = createSlice({
             state.state = "loading";
             })
         .addCase(handleUserSignUpAction.fulfilled , (state,action)=>{
-            console.log('====================================');
-            console.log(action,"action");
-            console.log('====================================');
+
             state.state = action.payload.status ? "sucess" : "idle" ;
             state.user = action.payload.status ? action.payload.user : null ;
             state.authenticated = action.payload.status;
@@ -150,9 +148,7 @@ const userSlice = createSlice({
             state.state = "loading";
         })
         .addCase(getUserInfoAction.fulfilled , (state,action)=>{
-            console.log('====================================');
-            console.log(action,"action");
-            console.log('====================================');
+
             state.state = action.payload.status ? "sucess" : "idle" ;
             state.user = action.payload.status ? action.payload.user : null ;
             state.authenticated = action.payload.status;
@@ -167,9 +163,7 @@ const userSlice = createSlice({
             state.state = "loading";
         })
         .addCase(handleUserUpdateProfileAction.fulfilled , (state,action)=>{
-            console.log('====================================');
-            console.log(action,"action");
-            console.log('====================================');
+
             state.state = action.payload.status ? "sucess" : "idle" ;
             state.user = action.payload.status ? action.payload.user : null ;
             state.authenticated = action.payload.status;
@@ -184,15 +178,27 @@ const userSlice = createSlice({
             state.state = "loading";
         })
         .addCase(handleRemoveUserProfileImageAction.fulfilled , (state,action)=>{
-            console.log('====================================');
-            console.log(action,"action");
-            console.log('====================================');
+
             state.state = action.payload.status ? "sucess" : "idle" ;
             state.user = action.payload.status ? action.payload.user : null ;
             state.authenticated = action.payload.status;
 
         })
         .addCase(handleRemoveUserProfileImageAction.rejected,(state,action)=>{
+            state.user = null ;
+            state.authenticated = false ;
+            state.state = "idle"
+        }).addCase(handleUserSignOutAction.pending, (state,action) => {
+            state.state = "loading";
+        })
+        .addCase(handleUserSignOutAction.fulfilled , (state,action)=>{
+
+            state.state = action.payload.status ? "sucess" : "idle" ;
+            state.user = action.payload.status ? null : null ;
+            state.authenticated = false;
+
+        })
+        .addCase(handleUserSignOutAction.rejected,(state,action)=>{
             state.user = null ;
             state.authenticated = false ;
             state.state = "idle"

@@ -136,6 +136,9 @@ const handleUserSignIn = async (request, response) => {
 };
 
 const handleUserSignOut = async (request, response) => {
+  console.log('====================================');
+  console.log(request.userId);
+  console.log('====================================');
   try {
     return response
       .status(200)
@@ -220,8 +223,8 @@ const handleUserProfileUpdate = async (request, response) => {
     }
 
     const updateInfo = {};
-    if (firstname) updateInfo.firstName = firstname;
-    if (lastname) updateInfo.lastName = lastname;
+    if (firstname) updateInfo.firstname = firstname;
+    if (lastname) updateInfo.lastname = lastname;
     if (color === 0 || color ) updateInfo.color = color;
     if( profileImagePath) {
       if( profileURL ) updateInfo.profileimage = profileURL?.secure_url ;

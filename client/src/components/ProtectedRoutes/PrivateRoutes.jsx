@@ -5,9 +5,10 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 
 const PrivateRoutes = ({children}) => {
     const location = useLocation();
- 
+    
     const isAuthenticated = useSelector((state)=>state.user.authenticated) ;
     const userInfo = useSelector(getUser);
+
     
      
     if( !userInfo?.profilesetup)
