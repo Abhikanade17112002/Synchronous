@@ -9,9 +9,7 @@ const Chat = () => {
   const [ user , setUser ] = useState({}) ;
   const userInfo = useSelector(getUser);
   const  chatType  = useSelector((state)=>state.chat.selectedChatType) ;
-  console.log('====================================');
-  console.log(chatType,"CHATTYPE");
-  console.log('====================================');
+
 
   return (
     <div className='flex h-[100vh] text-white overflow-hidden'>

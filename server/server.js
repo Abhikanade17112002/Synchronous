@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const connectToDatabase = require("./database/connectToDatabase");
 const AuthenticationRouter = require("./routes/authentication.routes");
 const ContactsRouter = require("./routes/contacts.routes") ;
+const MessagesRouter  = require("./routes/messages.route") ;
 const setUpSocketIO = require("./socket.io/socket");
 
 connectToDatabase()
@@ -32,6 +33,7 @@ connectToDatabase()
     // Routes
     App.use("/api/auth", AuthenticationRouter);
     App.use("/api/contacts", ContactsRouter);
+    App.use("/api/messages", MessagesRouter);
 
     App.get("/", (request, response) => {
       response.send("Hello World");
