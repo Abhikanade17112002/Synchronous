@@ -1,5 +1,5 @@
 const { Server } = require("socket.io");
-const { createServer } = require("http");
+const messagesModel = require("../models/messages.model") ;
 
 // MAPPING TO SOCKET ID AND USER ID
 const userSocketMapping = new Map();
@@ -16,6 +16,7 @@ const disconnect = (socket) => {
     }
   }
 };
+
 
 const setUpSocketIO = (server) => {
   try {
@@ -39,6 +40,47 @@ const setUpSocketIO = (server) => {
       } else {
         console.log("NO USER ID FOUND");
       }
+
+      const handleSendMessage = async (message) =>{
+        
+        try {
+          const senderSocketId = userSocketMapping.get(message.sender);
+          const reciverSocketId = userSocketMapping.get(message.reciver) ;
+      
+          const createdMessage = await messagesModel.create(message) ;
+        
+          const messageData = await messagesModel.findById(createdMessage._id)
+          .populate("sender")
+          .populate("reciver");
+                  
+          console.log('====================================');
+          console.log(messageData,message.sender,message.reciver,reciverSocketId,senderSocketId,"MSg");
+          console.log('====================================');
+      
+          // If reciver is Online  The Send Message Or Store it 
+          if( senderSocketId )
+            {
+
+              io.to(senderSocketId).emit("recivemessage", messageData);
+            }
+
+
+          if( reciverSocketId )
+          {
+            io.to(reciverSocketId).emit("recivemessage", messageData);
+          }
+         
+      
+      
+        } catch (error) {
+          console.log('====================================');
+          console.log(`Something Went Wrong While Sending A Message To User ${error}`);
+          console.log('====================================');
+        }
+      }
+
+      // Handle Send Messsage Event 
+      socket.on("sendmessage",handleSendMessage)
 
       // Handle individual socket disconnections
       socket.on("disconnect", () => {

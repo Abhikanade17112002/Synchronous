@@ -1,6 +1,85 @@
+
+// import { setAddMessage } from "@/store/chatSlice/chatSlice";
+// import { getUser } from "@/store/userSlice/userSlice";
+// import { createContext, useEffect, useRef, useContext } from "react";
+// import { useDispatch, useSelector } from "react-redux";
+// import { io } from "socket.io-client";
+
+// const SocketContext = createContext(null);
+
+// export const useSocket = () => {
+//   return useContext(SocketContext);
+// };
+
+// export const SocketProvider = ({ children }) => {
+ 
+//   const socket = useRef();
+//   const userInfo = useSelector(getUser);
+//   const dispatch = useDispatch();
+//   console.log('====================================');
+//   console.log(userInfo,"USERINFO");
+//   console.log('====================================');
+//   const selectedChatType = useSelector((state) => state.chat.selectedChatType);
+//   const selectedChatData = useSelector((state) => state.chat.selectedChatData);
+//   console.log('====================================');
+//   console.log(selectedChatData,selectedChatType,"HERE");
+//   console.log('====================================');
+
+
+
+//   useEffect(() => {
+//     if (userInfo) {
+//       socket.current = io.connect("http://localhost:9000", {
+//         query: { userId: userInfo._id },
+//         withCredentials: true,
+//       });
+
+//       socket.current.on("connect", () => {
+//         console.log(`Client Connect To Server With Id:`, socket.current.id);
+//       });
+
+//       // Handle Client Receive Message
+//       const handleClientReciveMessage = async (message , selectedChatData ,selectedChatType ) => {
+//         console.log("RECIVERMESSAGE oH oH ", message ,selectedChatType,selectedChatData);
+//         try {
+//           if (
+//             selectedChatType !== null &&
+//             (selectedChatData._id === message.sender._id ||
+//               selectedChatData._id === message.reciver._id)
+//           ) {
+//             console.log("RECIVERMESSAGE", message);
+//            dispatch(setAddMessage())
+//           }
+//         } catch (error) {
+//           console.error(error);
+//         }
+//       };
+   
+//       socket.current.on("recivemessage",(message)=>handleClientReciveMessage(message,selectedChatData,selectedChatType));
+
+//       // Cleanup when the component unmounts or when `userInfo` changes
+//       return ()=>{
+//         socket.current.disconnect();
+//       }
+//     }
+//   }, [userInfo]);
+
+//   return (
+//     <SocketContext.Provider value={socket.current}>
+//       {children}
+//     </SocketContext.Provider>
+//   );
+// };
+
+
+
+
+
+
+import { setAddMessage } from "@/store/chatSlice/chatSlice";
 import { getUser } from "@/store/userSlice/userSlice";
-import { createContext, useEffect, useRef, useState, useContext } from "react";
-import { useSelector } from "react-redux";
+import { createContext, useEffect, useRef, useContext } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
 
 const SocketContext = createContext(null);
@@ -12,6 +91,19 @@ export const useSocket = () => {
 export const SocketProvider = ({ children }) => {
   const socket = useRef();
   const userInfo = useSelector(getUser);
+  const dispatch = useDispatch();
+
+  const selectedChatType = useSelector((state) => state.chat.selectedChatType);
+  const selectedChatData = useSelector((state) => state.chat.selectedChatData);
+
+  const selectedChatTypeRef = useRef(selectedChatType);
+  const selectedChatDataRef = useRef(selectedChatData);
+
+  // Keep refs updated with the latest state
+  useEffect(() => {
+    selectedChatTypeRef.current = selectedChatType;
+    selectedChatDataRef.current = selectedChatData;
+  }, [selectedChatType, selectedChatData]);
 
   useEffect(() => {
     if (userInfo) {
@@ -19,25 +111,44 @@ export const SocketProvider = ({ children }) => {
         query: { userId: userInfo._id },
         withCredentials: true,
       });
-  
-      // Client-side should use 'connect' event to verify successful connection
+
       socket.current.on("connect", () => {
-        console.log("connected");
+        console.log(`Client Connected To Server With Id:`, socket.current.id);
       });
-  
+
+      // Handle Client Receive Message
+      const handleClientReciveMessage = (message) => {
+        console.log("Received Message", message, selectedChatTypeRef.current, selectedChatDataRef.current);
+        try {
+          if (
+            selectedChatTypeRef.current !== null &&
+            (selectedChatDataRef.current._id === message.sender._id ||
+              selectedChatDataRef.current._id === message.reciver._id)
+          ) {
+            console.log("Dispatching SetAddMessage with message:", message);
+            dispatch(setAddMessage({ message }));
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+      // Attach listener for receiving messages
+      socket.current.on("recivemessage", handleClientReciveMessage);
+
       // Cleanup when the component unmounts or when `userInfo` changes
       return () => {
         if (socket.current) {
           socket.current.disconnect();
-          console.log("disconnected");
         }
       };
     }
-  }, [userInfo]);
-  
+  }, [userInfo, dispatch]);
+
   return (
     <SocketContext.Provider value={socket.current}>
       {children}
     </SocketContext.Provider>
   );
 };
+
