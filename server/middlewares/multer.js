@@ -8,9 +8,8 @@ const storage = multer.diskStorage({
         if (file.fieldname === 'profileimage') {
             cb(null, './uploads/userprofile'); 
         } 
-        
         else {
-            cb(null, './uploads'); 
+            cb(null, './uploads/files'); 
         }
     },
     filename: function (req, file, cb) {

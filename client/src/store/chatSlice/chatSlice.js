@@ -38,6 +38,32 @@ export const handleFetchAllDMMessages = createAsyncThunk(
   }
 );
 
+
+export const handleUploadChatFile = createAsyncThunk(
+  "chat/file", // Note: The name should be in "slice/action" format
+  async ( formData ) => {
+    console.log("====================================");
+    console.log( formData, "UPLOAD FILE");
+    console.log("====================================");
+    try {
+      const response = await axios.post(
+        `http://localhost:9000/api/messages/upload`,
+         formData ,
+        {
+          headers: {
+            "Content-Type": "multi-part/formdata",
+          },
+          withCredentials: true,
+        }
+      );
+      // Return the response data
+      return response.data;
+    } catch (error) {
+      console.error("Error Uploading chat File :: ", error);
+      throw error; // Propagate error to handle rejection state
+    }
+  }
+);
 const chatSlice = createSlice({
   name: "chat",
   initialState,
@@ -112,7 +138,8 @@ const chatSlice = createSlice({
       .addCase(handleFetchAllDMMessages.rejected, (state, action) => {
         state.selectedChatMessages = [];
         state.state = "idle";
-      });
+      })
+      
   },
 });
 
