@@ -28,6 +28,25 @@ export const handleGetContactsAction = createAsyncThunk("/contact/signin",async 
 }) ;
 
 
+export const handleGetAllContactsForChannelAction = createAsyncThunk("/contact/getallcontacts",async () =>{
+
+    try {
+        const response = await axios.get(`${import.meta.env.VITE_BASEURL}/contacts/getallcontacts`,{
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            withCredentials:true 
+          }) ;
+
+
+          return response.data ;
+    } catch (error) {
+        return error ;
+    }
+}) ;
+
+
+
 const contactSlice = createSlice({
     name: "contact",
     initialState,

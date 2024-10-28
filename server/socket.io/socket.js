@@ -1,5 +1,7 @@
 const { Server } = require("socket.io");
 const messagesModel = require("../models/messages.model") ;
+const e = require("cors");
+const channelModel = require("../models/channel.model");
 
 // MAPPING TO SOCKET ID AND USER ID
 const userSocketMapping = new Map();
@@ -81,6 +83,81 @@ const setUpSocketIO = (server) => {
 
       // Handle Send Messsage Event 
       socket.on("sendmessage",handleSendMessage)
+
+
+
+
+      // Handle Send Channel Message
+
+
+      const handleSendChannelMessage = async (recivedMessage) =>{
+        try {
+         const  {
+            sender,
+            channelId,
+            message,
+            messagetype,
+            file
+          } = recivedMessage ;
+          console.log('====================================');
+          console.log({
+            sender,
+            channelId,
+            message,
+            messagetype,
+            file
+          },"MESSAGE FROM CAHNNEL");
+          console.log('====================================');
+
+
+          const createdMessage = await messagesModel.create({
+            sender ,
+            message,
+            reciver:null ,
+            messagetype,
+            file
+          })
+
+
+          const messageData = await messagesModel.findById(createdMessage?._id)
+          .populate("sender","id email firstname lastname color profileimage")
+          .exec();
+
+          await channelModel.findByIdAndUpdate(channelId,{
+            $push:{messages:createdMessage?._id}
+          }) ;
+
+          const channel = await channelModel.findById(channelId)
+          .populate("members") ;
+
+
+          const finalData = {...messageData._doc , channelId:channel._id} ;
+
+
+          if( channel && channel.members )
+          {
+            channel.members.forEach((member)=>{
+              const memberSocketId = userSocketMapping.get(member._id.toString());
+              if(memberSocketId){
+                io.to(memberSocketId).emit("recivechannelmessage",finalData);
+              }
+
+             
+            })
+            const adminSocketId = userSocketMapping.get(channel.admin._id.toString());
+            if(adminSocketId){
+              io.to(adminSocketId).emit("recivechannelmessage",finalData);
+            }
+          }
+        } catch (error) {
+          console.log('====================================');
+          console.log(`ERROR WHILE SEND A CHANNEL MESSAGE :: `,error);
+          console.log('====================================');
+        }
+      }
+
+      // Send Channel Message Event
+      socket.on("sendchannelmessage",handleSendChannelMessage);
 
       // Handle individual socket disconnections
       socket.on("disconnect", () => {

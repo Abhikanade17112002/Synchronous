@@ -7,7 +7,7 @@ const AuthenticationRouter = require("./routes/authentication.routes");
 const ContactsRouter = require("./routes/contacts.routes") ;
 const MessagesRouter  = require("./routes/messages.route") ;
 const setUpSocketIO = require("./socket.io/socket");
-
+const channelRouter = require("./routes/channel.routes");
 connectToDatabase()
   .then((connectionInstance) => {
     const App = express();
@@ -34,6 +34,7 @@ connectToDatabase()
     App.use("/api/auth", AuthenticationRouter);
     App.use("/api/contacts", ContactsRouter);
     App.use("/api/messages", MessagesRouter);
+    App.use("/api/channels", channelRouter);
 
     App.get("/", (request, response) => {
       response.send("Hello World");

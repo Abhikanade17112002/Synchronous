@@ -11,7 +11,7 @@ import { SocketProvider } from './socketcontext/SocketContext.jsx';
 
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  
    
     <Provider store={store}>
     
@@ -23,5 +23,5 @@ createRoot(document.getElementById('root')).render(
     </Provider>
     
     
-  </StrictMode>,
+ 
 )

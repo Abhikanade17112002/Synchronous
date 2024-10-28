@@ -40,9 +40,9 @@ const MessageBar = () => {
   const [emojiPicker, setEmojiPicker] = useState(false);
   const handleSendMessage = async (event) => {
     event.preventDefault();
-    console.log('====================================');
+    console.log("====================================");
     console.log(message);
-    console.log('====================================');
+    console.log("====================================");
 
     try {
       if (selectedChatType === "contact") {
@@ -53,6 +53,16 @@ const MessageBar = () => {
           messagetype: "text",
           file: null,
         });
+        setMessage("");
+      } else if (selectedChatType === "channel") {
+        socket.emit("sendchannelmessage", {
+          sender: userInfo._id,
+          channelId: selectedChatData._id,
+          message,
+          messagetype: "text",
+          file: null,
+        });
+        setMessage("");
       }
     } catch (error) {}
   };
@@ -82,10 +92,13 @@ const MessageBar = () => {
 
         if (response.payload.status) {
           toast.success(response.payload.message);
-          console.log('====================================');
-          console.log(response.payload,"FILEURL");
-          console.log('====================================');
+          console.log("====================================");
+          console.log(response.payload, "FILEURL");
+          console.log("====================================");
           const fileUrl = response.payload.file;
+          console.log("====================================");
+          console.log(selectedChatType, "FILEURL");
+          console.log("====================================");
 
           if (selectedChatType === "contact") {
             socket.emit("sendmessage", {
@@ -95,6 +108,15 @@ const MessageBar = () => {
               messagetype: "file",
               file: fileUrl,
             });
+          } else if (selectedChatType === "channel") {
+            socket.emit("sendchannelmessage", {
+              sender: userInfo._id,
+              channelId: selectedChatData._id,
+              message:null,
+              messagetype: "file",
+              file: fileUrl,
+            });
+            setMessage("");
           }
         } else {
           toast.error(response.payload.message);

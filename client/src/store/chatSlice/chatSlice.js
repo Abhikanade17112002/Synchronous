@@ -7,7 +7,7 @@ const initialState = {
   selectedChatData: null,
   selectedChatMessages: [],
   selectedUserDMList:[],
-  selectUserChannelList:[],
+  selectedUserChannelList:[],
   state: "idle",
 };
 
@@ -60,6 +60,82 @@ export const handleUploadChatFile = createAsyncThunk(
       return response.data;
     } catch (error) {
       console.error("Error Uploading chat File :: ", error);
+      throw error; // Propagate error to handle rejection state
+    }
+  }
+);
+
+export const handleCreateNewChannelAction = createAsyncThunk(
+  "chat/new/channel", // Note: The name should be in "slice/action" format
+  async ( channelData ) => {
+    console.log("====================================");
+    console.log( channelData, "channelData");
+    console.log("====================================");
+    try {
+      const response = await axios.post(
+        `http://localhost:9000/api/channels/createchannel`,
+        channelData ,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      // Return the response data
+      return response.data;
+    } catch (error) {
+      console.error("Error While creating new channel  :: ", error);
+      throw error; // Propagate error to handle rejection state
+    }
+  }
+);
+export const handleFetchAllUSerChannelAction = createAsyncThunk(
+  "chat/fetch/channel", // Note: The name should be in "slice/action" format
+  async ( ) => {
+   
+    try {
+      const response = await axios.get(
+        `http://localhost:9000/api/channels/fetchuserchannels`,
+         
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      // Return the response data
+      return response.data;
+    } catch (error) {
+      console.error("Error While Fetching User Channels   :: ", error);
+      throw error; // Propagate error to handle rejection state
+    }
+  }
+);
+
+
+export const handleFetchChannelChatsAction = createAsyncThunk(
+  "chat/fetch/channel/chats", // Note: The name should be in "slice/action" format
+  async ( channelId) => {
+   
+    try {
+      const response = await axios.get(
+        `http://localhost:9000/api/channels/fetchuserchannelmessages`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true, // Include credentials like cookies
+          params: {
+            channelId: channelId, // Pass channel ID as a parameter
+          },
+        }
+      );
+      // Return the response data
+      return response.data;
+    } catch (error) {
+      console.error("Error While Fetching User Channels   :: ", error);
       throw error; // Propagate error to handle rejection state
     }
   }
@@ -123,6 +199,19 @@ const chatSlice = createSlice({
       console.log("====================================");
       state.selectUserChannelList = action.payload;
     },
+    addChannel(state,action){
+      console.log("====================================");
+      console.log(action);
+      console.log("====================================");
+      state.selectUserChannelList.push(action.payload);
+
+    },
+    setChannelList(state, action) {
+      console.log("====================================");
+      console.log(action);
+      console.log("====================================");
+      state.channelList = action.payload;
+      },
   },
   extraReducers: (builder) => {
     builder
@@ -139,6 +228,57 @@ const chatSlice = createSlice({
         state.selectedChatMessages = [];
         state.state = "idle";
       })
+      .addCase(handleCreateNewChannelAction.pending, (state, action) => {
+        state.state = "loading";
+      })
+      .addCase(handleCreateNewChannelAction.fulfilled, (state, action) => {
+        console.log('====================================');
+        console.log(action,"JJJJJJJJasasdAsdAD");
+        console.log('====================================');
+        state.state = action.payload.status ? "success" : "idle";
+        action.payload.status
+          ? state.selectedUserChannelList.push(action.payload.channel)
+          : state.selectedUserChannelList;
+      })
+      .addCase(handleCreateNewChannelAction.rejected, (state, action) => {
+        state.state = "idle";
+      })
+      .addCase(handleFetchAllUSerChannelAction.pending, (state, action) => {
+        state.state = "loading";
+      })
+      .addCase(handleFetchAllUSerChannelAction.fulfilled, (state, action) => {
+        console.log('====================================');
+        console.log(action,"KKKKKKKK");
+        console.log('====================================');
+        state.state = action.payload.status ? "success" : "idle";
+        if(action.payload.status)
+        {
+          state.selectedUserChannelList = action.payload.channels
+        }
+       
+        
+      })
+      .addCase(handleFetchAllUSerChannelAction.rejected, (state, action) => {
+        state.state = "idle";
+      })
+      .addCase(handleFetchChannelChatsAction.pending, (state, action) => {
+        state.state = "loading";
+      })
+      .addCase(handleFetchChannelChatsAction.fulfilled, (state, action) => {
+        console.log('====================================');
+        console.log(action,"MMMMMMMM");
+        console.log('====================================');
+        state.state = action.payload.status ? "success" : "idle";
+        if(action.payload.status)
+        {
+          state.selectedChatMessages = action.payload.messages
+        }
+       
+        
+      })
+      .addCase(handleFetchChannelChatsAction.rejected, (state, action) => {
+        state.state = "idle";
+      })
       
   },
 });
@@ -151,6 +291,8 @@ export const {
   setSelectChatType,
   setAddMessage,
   setSelectedUserChannelList,
-  setSelectedUserDMList
+  setSelectedUserDMList,
+  setChannelList,
+  addChannel
 } = chatSlice.actions;
 export default chatSlice.reducer;
