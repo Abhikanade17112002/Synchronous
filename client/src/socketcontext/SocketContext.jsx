@@ -136,6 +136,24 @@ export const SocketProvider = ({ children }) => {
       // Attach listener for receiving messages
       socket.current.on("recivemessage", handleClientReciveMessage);
 
+
+        // Handle Client Receive Message
+        const handleClientReciveChannelMessage = (message) => {
+          console.log("Received Channel Message", message, selectedChatTypeRef.current, selectedChatDataRef.current);
+          try {
+            if (
+              selectedChatTypeRef.current !== null &&
+              (selectedChatDataRef.current._id === message.channelId )) 
+              {
+              console.log("Dispatching SetAddMessage Channel  with message:", message);
+              dispatch(setAddMessage({ message }));
+            }
+          } catch (error) {
+            console.error(error);
+          }
+        };
+      socket.current.on("recivechannelmessage", handleClientReciveChannelMessage);
+
       // Cleanup when the component unmounts or when `userInfo` changes
       return () => {
         if (socket.current) {

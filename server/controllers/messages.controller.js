@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken') ;
 const messagesModel = require('../models/messages.model');
-
+const cloudinary = require("../utils/cloudinary");
+const deleteServerSideFiles = require("../utils/deleteServerSideFiles") ;
 const handleGetMessages = async (request,response) =>{
 
    
@@ -35,8 +36,39 @@ const handleGetMessages = async (request,response) =>{
     }
 }
 
+const handleUploadFile = async ( request , response ) =>{
+    try {
+        console.log('====================================');
+        console.log(request.file,"FILE");
+        console.log('====================================');
+        const  filePath = request.file ;
 
+        if( filePath )
+        {
+            const uploadResult = await cloudinary.uploader.upload(filePath?.path);
+            deleteServerSideFiles(filePath.path);
+            return response.json({
+                message : "File uploaded successfully",
+                status:true,
+                file:uploadResult.secure_url
+                
+                })
+        }
+        else{
+            return response.json({
+                message : "File not uploaded",
+                status:false
+                })
+        }
+        
+    } catch (error) {
+        console.log('====================================');
+        console.log("SOMETHING WENT WRONG IN UPLOAD CHAT FILE",error);
+        console.log('====================================');
+    }
+}
 
 module.exports = {
-   handleGetMessages
+   handleGetMessages ,
+   handleUploadFile
 }

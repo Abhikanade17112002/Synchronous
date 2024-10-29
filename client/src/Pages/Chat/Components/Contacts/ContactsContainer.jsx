@@ -5,8 +5,11 @@ import ProfileInfo from '../Chat/Components/ProfileInfo';
 import NewDm from '../Chat/Components/NewDm';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { setSelectedUserDMList } from '@/store/chatSlice/chatSlice';
+import { handleFetchAllUSerChannelAction, setSelectedUserDMList } from '@/store/chatSlice/chatSlice';
 import ContactList from './ContactList';
+import CreateChannel from './CreateChannel';
+import GroupList from './GroupList';
+
 
 const ContactsContainer = () => {
  const dispatch = useDispatch() ;
@@ -17,9 +20,11 @@ const ContactsContainer = () => {
         const response = await axios.get("http://localhost:9000/api/contacts/getdmlist",{
           withCredentials:true
         })
+        const channelsResponse = await dispatch(handleFetchAllUSerChannelAction());
+
 
         console.log('====================================');
-        console.log(response.data.contacts,response,"LOOK AT ME ");
+        console.log(channelsResponse,"channelsResponse");
         console.log('====================================');
         dispatch(setSelectedUserDMList(response.data.contacts))
       } catch (error) {
@@ -42,12 +47,16 @@ const ContactsContainer = () => {
               < NewDm />
             </div>
             <div className="max-h-[38vh] overflow-y-auto scrollbar-hidden">
-              <ContactList />
+              <ContactList isChannel={false}/>
             </div>
            </div>
            <div className="my-5 ">
             <div className="flex items-center justify-between  pr-10">
               <Title text={"Channels"} />
+              <CreateChannel />
+            </div>
+            <div className="max-h-[38vh] overflow-y-auto scrollbar-hidden">
+              <GroupList isChannel={true}/>
             </div>
            </div>
            <ProfileInfo />
