@@ -7,6 +7,10 @@ export default {
   ],
   theme: {
   	extend: {
+		scrollbar: {
+			hide: 'scrollbar-hide',
+		  },
+		
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',

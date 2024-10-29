@@ -75,15 +75,15 @@ const handleSelectNewContact = (contact) =>{
               onClick={() => setOpenNewContactModal(true)}
             />
           </TooltipTrigger>
-          <TooltipContent className="bg-[#1c1b1e] border-none mb-2 p-3 text-white">
-            Select New Contact
+          <TooltipContent className="bg-[#1c1b1e]  border-none mb-2 p-3 text-white">
+             Select New Contact
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
       <Dialog open={openNewContactModal} onOpenChange={setOpenNewContactModal}>
-        <DialogContent className="bg-[#181920] border-none text-white w-[400px] h-[400px] flex flex-col">
+        <DialogContent className="bg-[#181920] border-none text-white md:w-[400px] md:h-[400px] w-[250px] h-[400px] flex flex-col">
           <DialogHeader>
-            <DialogTitle>Select a New Contact</DialogTitle>
+            <DialogTitle className="md:text-md text-sm">Select a New Contact</DialogTitle>
             <DialogDescription></DialogDescription>
           </DialogHeader>
           <div className="">
@@ -91,7 +91,7 @@ const handleSelectNewContact = (contact) =>{
               onChange={(e) => handleSearchContacts(e.target.value)}
               type="text"
               placeholder="Search Contact"
-              className="w-full rounded-lg p-3 bg-[#2c2e3b] border-none"
+              className="w-full rounded-lg md:p-3 p-2 text-sm md:text-md bg-[#2c2e3b] border-none"
             />
           </div>
           {searchedContacts.length <= 0 ? (
@@ -103,7 +103,7 @@ const handleSelectNewContact = (contact) =>{
                 options={AnimationOptions}
               />
               <div className="text-opacity-80 flex flex-col gap-5 items-center mt-10 lg:text-2xl text-3xl transition-all duration-300 text-center">
-                <h3 className="popins-medium">
+                <h3 className="popins-medium text-sm md:text-xl">
                   <span className="text-purple-500"></span> Search New{" "}
                   <span className="text-purple-500">Contact</span>
                 </h3>

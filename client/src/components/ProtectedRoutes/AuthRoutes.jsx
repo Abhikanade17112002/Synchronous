@@ -7,7 +7,6 @@ const AuthRoutes = ({ children }) => {
   const location = useLocation();
   const user = useSelector((state) => state.user);
 
-
   if (!user.authenticated && !location.pathname.includes("/auth")) {
     return <Navigate to={"/auth"}></Navigate>;
   }

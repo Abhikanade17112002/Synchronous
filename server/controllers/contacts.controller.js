@@ -6,9 +6,7 @@ const { default: mongoose } = require("mongoose");
 const handleSearchContacts = async (request, response) => {
   try {
     const { searchterm } = request.body;
-    console.log("====================================");
-    console.log(searchterm);
-    console.log("====================================");
+
     if (!searchterm) {
       return response.json({ message: "search term required", status: 200 });
     }
@@ -31,18 +29,16 @@ const handleSearchContacts = async (request, response) => {
       status: 200,
     });
   } catch (error) {
-    console.log("====================================");
+
     console.log("SOMETHING WENT WRONG IN SEARCH CONATCTS");
-    console.log("====================================");
+
   }
 };
 
 const handleGetAllContactsForChannel = async (request, response) => {
   try {
     const currentLoggedInUser = request.userId;
-    console.log("====================================");
-    console.log(currentLoggedInUser, "currentLoggedInUser");
-    console.log("====================================");
+
 
     const users = await userModel.find(
       {
@@ -65,9 +61,9 @@ const handleGetAllContactsForChannel = async (request, response) => {
       status: 200,
     });
   } catch (error) {
-    console.log("====================================");
+    
     console.log("SOMETHING WENT WRONG IN SEARCH CONATCTS");
-    console.log("====================================");
+    
   }
 };
 
@@ -75,9 +71,7 @@ const handleGetDmContacts = async (request, response) => {
   try {
     const { userId } = request;
     const userObjectId = new mongoose.Types.ObjectId(userId);
-    console.log("====================================");
-    console.log(userId, "PPPPPPP");
-    console.log("====================================");
+
 
     const contacts = await messagesModel.aggregate([
       {
@@ -133,9 +127,9 @@ const handleGetDmContacts = async (request, response) => {
       contacts,
     });
   } catch (error) {
-    console.log("====================================");
+    
     console.log(`Smething Went Wrong While Fetching DM LIST`, error);
-    console.log("====================================");
+   
   }
 };
 

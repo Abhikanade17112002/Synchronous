@@ -33,10 +33,10 @@ const ContactList = ({ isChannel = false }) => {
   };
 
   return (
-    <div className="mt-5">
+    <div className="mt-5 ">
       {contactList.map((contact) => (
         <div
-          className={`pl-10 py-2 flex gap-5 transition-all duration-300 cursor-pointer ${
+          className={`pl-10  py-5 flex gap-5 transition-all duration-300 cursor-pointer ${
             selectedChatData && selectedChatData._id === contact._id
               ? "bg-[#8417ff] hover:bg-[#8417ff]"
               : "hover:bg-[#f1f1f111]"
@@ -44,7 +44,7 @@ const ContactList = ({ isChannel = false }) => {
           onClick={() => handleContactClicked(contact)}
           key={contact._id}
         >
-          <div className="flex gap-5 items-center justify-start">
+          <div className="flex gap-5 items-center justify-start ">
             {!isChannel && (
               <Avatar className="h-10 w-10 rounded-full">
                 {contact?.profileimage ? (
@@ -55,7 +55,7 @@ const ContactList = ({ isChannel = false }) => {
                   />
                 ) : (
                   <div
-                    className={`uppercase overflow-hidden h-10 w-10 text-lg border border-black flex justify-center items-center rounded-full ${getColor(
+                    className={`uppercase overflow-hidden h-10 w-10 md:text-sm  text-[10px] border border-black flex justify-center items-center rounded-full ${getColor(
                       contact?.color
                     )}`}
                   >
@@ -77,7 +77,7 @@ const ContactList = ({ isChannel = false }) => {
           {isChannel ? (
             <span>{contact.name}</span>
           ) : (
-            <div className="flex flex-col text-sm items-center justify-center ">
+            <div className="flex flex-col md:text-sm  text-[12px] items-center justify-center ">
               <div className="w-full">
                 {contact.firstname && contact.lastname
                   ? `${contact.firstname}  ${contact.lastname} `

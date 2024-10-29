@@ -40,10 +40,10 @@ const ProfileInfo = () => {
   }
 
   return (
-    <div className="absolute bottom-0 h-16  flex items-center justify-between px-10 w-full bg-[#2a2b33]">
+    <div className="absolute bottom-0 md:h-16 h-10 flex items-center justify-between md:px-10 px-6 w-full bg-[#2a2b33]">
       <div className="flex gap-3 items-center justify-center">
-        <div className="h-8 w-8  relative">
-          <Avatar className="h-8 w-8  rounded-full">
+        <div className="md:h-8 md:w-8 h-7 w-7  relative">
+          <Avatar className="md:h-8 md:w-8  h-7 w-7 rounded-full">
             {user?.profileimage ? (
               <AvatarImage
                 src={user?.profileimage || "https://github.com/shadcn.png"}
@@ -52,7 +52,7 @@ const ProfileInfo = () => {
               />
             ) : (
               <div
-                className={` uppercase overflow-hidden h-8 w-8  text-lg border border-black flex justify-center  items-center  rounded-full ${getColor(
+                className={` uppercase overflow-hidden md:h-8 md:w-8  h-7 w-7  text-md  md:text-lg border border-black flex justify-center  items-center  rounded-full ${getColor(
                   user?.color
                 )} `}
               >
@@ -63,7 +63,7 @@ const ProfileInfo = () => {
             )}
           </Avatar>
         </div>
-        <div className="text-[12px] font-bold">
+        <div className="md:text-[12px] text-[10px] font-bold">
           {user.firstname && user.lastname
             ? `${user.firstname} `
             : ""}
@@ -73,7 +73,7 @@ const ProfileInfo = () => {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
-              <FiEdit2 onClick={() => navigate("/profile")} />
+              <FiEdit2 className="md:text-[16px] text-[14px] font-bold" onClick={() => navigate("/profile")} />
             </TooltipTrigger>
             <TooltipContent>
               <p>Add to library</p>
@@ -81,7 +81,7 @@ const ProfileInfo = () => {
           </Tooltip>
         </TooltipProvider>
         <div className="" onClick={()=>handleUserSignOut()}>
-        <MdLogout  />
+        <MdLogout className="md:text-[16px] text-[14px] font-bold"  />
         </div>
       </div>
     </div>

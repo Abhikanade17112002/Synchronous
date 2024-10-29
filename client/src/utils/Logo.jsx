@@ -3,7 +3,7 @@ const Logo = () => {
       <div className="flex p-5  justify-start items-center gap-2">
         <svg
           id="logo-38"
-          width="78"
+          width="65"
           height="32"
           viewBox="0 0 78 32"
           fill="none"
@@ -26,7 +26,7 @@ const Logo = () => {
             fill="#a16ee8"
           ></path>{" "}
         </svg>
-        <span className="text-3xl font-semibold ">Syncronus</span>
+        <span className="md:text-2xl font-bold ">Syncronus</span>
       </div>
     );
   };

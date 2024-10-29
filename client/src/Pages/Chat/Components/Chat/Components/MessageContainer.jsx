@@ -240,7 +240,7 @@ const MessageContainer = () => {
               setOpenFullPageImage(true);
               setImageURL(message.file);
             }}
-            className="w-[300px] h-[350px] object-contain flex flex-col justify-evenly items-center"
+            className="md:w-[300px] w-[100px] h-[350px] object-contain flex flex-col justify-evenly items-center"
           >
             <img
               src={message.file}
@@ -251,16 +251,16 @@ const MessageContainer = () => {
               className="flex justify-center items-center text-white text-3xl cursor-pointer"
               onClick={() => handleFileDownload(message.file)}
             >
-              <span className="text-sm">Download</span>
-              <IoMdDownload />
+              <span className="md:text-[12px] text-[8px]">Download</span>
+              <IoMdDownload   className="md:text-[18px] text-[14px]" />
             </div>
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center gap-5">
-            <span className="text-white/80 text-3xl bg-black rounded-full p-3">
+          <div className="flex  w-[100px] md:w-full flex-col items-center justify-center gap-5">
+            <span className="text-white/80 md:text-3xl text-xl bg-black rounded-full p-3">
               <MdFolderZip />
             </span>
-            <span className="text-white text-[12px] font-bold">
+            <span className="text-white md:text-[12px] text-[8px] wordbreak-lg font-bold">
               {String(message.file).split("/").pop()}
             </span>
             <div
@@ -301,7 +301,7 @@ const MessageContainer = () => {
   );
 
   return (
-    <div className="flex-1 overflow-y-auto  scrollbar-hidden p-4 px-4 md:px-8 lg:px-16 xl:px-20 w-full">
+    <div className="flex-1 text-[10px] md:text-[14px] overflow-y-auto  scrollbar-hidden p-4 px-4 md:px-8 lg:px-16 xl:px-20 w-full">
       {renderMessages()}
       <div ref={messagesEndRef} />
       {openFullPageImage && <FullScreenImage />}

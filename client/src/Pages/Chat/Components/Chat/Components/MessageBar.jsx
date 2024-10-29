@@ -131,20 +131,20 @@ const MessageBar = () => {
     }
   };
   return (
-    <div className="h-[10vh] bg-[#1c1d25] flex justify-center items-center gap-6 px-8 mb-6">
+    <div className="md:h-[10vh] h-[6vh]  bg-[#1c1d25] flex justify-center items-center gap-4 px-5 md:mb-4 mb-2">
       <div className="flex-1 flex bg-[#2a2b33] rounded-md items-center gap-5 pr-5">
         <input
           type="text"
           placeholder="Enter Message"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          className="flex-1 p-5 bg-transparent  rounded-md focus: border-none focus:outline-none"
+          className="flex-1 md:p-4 p-2 text-[12px] bg-transparent  rounded-md focus: border-none focus:outline-none"
         />
         <button
           onClick={handleAttachmentClicked}
           className="text-neutral-500  focus:border-none  focus:outline-none focus:text-white duration-300 transition-all"
         >
-          <GrAttachment className="text-2xl"></GrAttachment>
+          <GrAttachment className="md:text-xl  text-[12px]"></GrAttachment>
         </button>
         <input
           type="file"
@@ -157,7 +157,7 @@ const MessageBar = () => {
             onClick={() => setEmojiPicker((prevState) => !prevState)}
             className="text-neutral-500  focus:border-none  focus:outline-none focus:text-white duration-300 transition-all"
           >
-            <RiEmojiStickerLine className="text-2xl"></RiEmojiStickerLine>
+            <RiEmojiStickerLine className="md:text-xl  text-[12px]"></RiEmojiStickerLine>
           </button>
           <div className="absolute bottom-16 right-0" ref={emojiPickerRef}>
             <EmojiPicker
@@ -169,13 +169,15 @@ const MessageBar = () => {
           </div>
         </div>
       </div>
-
+      <div className="flex justify-center items-center">
       <button
         onClick={(event) => handleSendMessage(event)}
-        className="bg-[#8417ff] rounded-md flex  items-center justify-center p-5    focus:border-none  focus:outline-none text-white focus:text-white duration-300 transition-all hover:bg-[#741bda]"
+        className="bg-[#8417ff] rounded-md flex  items-center justify-center md:p-3 p-2    focus:border-none  focus:outline-none text-white focus:text-white duration-300 transition-all hover:bg-[#741bda]"
       >
-        <IoSend className="text-2xl"></IoSend>
+        <IoSend className="md:text-xl text-md"></IoSend>
       </button>
+      </div>
+      
     </div>
   );
 };

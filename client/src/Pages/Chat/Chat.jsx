@@ -12,13 +12,12 @@ const Chat = () => {
 
 
   return (
-    <div className='flex h-[100vh] text-white overflow-hidden'>
+    <div className='flex justify-center items-center h-[100vh] text-white overflow-y-hidden'>
       <ContactsContainer/>
       {
         chatType === null ? <EmptyChatsContainer/> : <ChatContainer/>
       }
-      {/* <EmptyChatsContainer/> */}
-      {/* <ChatContainer/> */}
+
     </div>
   )
 }

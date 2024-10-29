@@ -23,9 +23,7 @@ const handleFetchAllUserChannels = async (request, response) => {
 const handleCreateChannel = async (request, response) => {
   try {
     const { name, members } = request.body;
-    console.log("====================================");
-    console.log(name, members);
-    console.log("====================================");
+
     const adminId = request.userId;
     if (!name || !members) {
       return response.json({
@@ -73,9 +71,7 @@ const handleCreateChannel = async (request, response) => {
 const handleFetchAllChannelMessage = async (request, response) => {
   try {
     const channelId  = request.query.channelId
-    console.log("====================================");
-    console.log("CHANNEL ID", channelId);
-    console.log("====================================");
+
     const channel = await channelModel
       .findById(channelId)
       .populate({
@@ -86,9 +82,7 @@ const handleFetchAllChannelMessage = async (request, response) => {
         },
       });
 
-      console.log('====================================');
-      console.log(channel,"CHANNEL");
-      console.log('====================================');
+
 
 
       if( !channel )
@@ -107,16 +101,11 @@ const handleFetchAllChannelMessage = async (request, response) => {
           messages:channel.messages
         });
       }
-      // return response.json({
-      //       message: "Channel messages fetched successfully",
-      //       status: true,
-      //       channel: channel,
-      //       messages:[]
-      //     });
+
   } catch (error) {
-    console.log("====================================");
+   
     console.log("SOMETHING WENT WRONG WHILE FETCHING CHANNEL CHATS", error);
-    console.log("====================================");
+   
   }
 };
 module.exports = {

@@ -13,7 +13,7 @@ const handleUserSignUp = async (request, response) => {
   try {
     const { username, email, password } = request.body;
 
-    console.log({ username, email, password });
+    
 
     if (!email || !username || !password) {
       return response.status(200).json({
@@ -136,9 +136,8 @@ const handleUserSignIn = async (request, response) => {
 };
 
 const handleUserSignOut = async (request, response) => {
-  console.log('====================================');
-  console.log(request.userId);
-  console.log('====================================');
+  
+  
   try {
     return response
       .status(200)
@@ -193,9 +192,9 @@ const handleGetUserInfo = async (request , response ) =>{
       })
     }
   } catch (error) {
-    console.log('====================================');
+    
     console.log("SOMETHING WENT WRONG IN GET USER INFO",error);
-    console.log('====================================');
+
   }
 }
 const handleUserProfileUpdate = async (request, response) => {

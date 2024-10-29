@@ -1,4 +1,3 @@
-
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -6,18 +5,15 @@ const initialState = {
   selectedChatType: null,
   selectedChatData: null,
   selectedChatMessages: [],
-  selectedUserDMList:[],
-  selectedUserChannelList:[],
+  selectedUserDMList: [],
+  selectedUserChannelList: [],
   state: "idle",
 };
 
 // Fixing the `createAsyncThunk` to accept a single argument object
 export const handleFetchAllDMMessages = createAsyncThunk(
   "chat/fetchMessages", // Note: The name should be in "slice/action" format
-  async ( reciver ) => {
-    console.log("====================================");
-    console.log( reciver, "SENDRECIV");
-    console.log("====================================");
+  async (reciver) => {
     try {
       const response = await axios.post(
         `http://localhost:9000/api/messages/get`,
@@ -38,17 +34,13 @@ export const handleFetchAllDMMessages = createAsyncThunk(
   }
 );
 
-
 export const handleUploadChatFile = createAsyncThunk(
   "chat/file", // Note: The name should be in "slice/action" format
-  async ( formData ) => {
-    console.log("====================================");
-    console.log( formData, "UPLOAD FILE");
-    console.log("====================================");
+  async (formData) => {
     try {
       const response = await axios.post(
         `http://localhost:9000/api/messages/upload`,
-         formData ,
+        formData,
         {
           headers: {
             "Content-Type": "multi-part/formdata",
@@ -67,14 +59,11 @@ export const handleUploadChatFile = createAsyncThunk(
 
 export const handleCreateNewChannelAction = createAsyncThunk(
   "chat/new/channel", // Note: The name should be in "slice/action" format
-  async ( channelData ) => {
-    console.log("====================================");
-    console.log( channelData, "channelData");
-    console.log("====================================");
+  async (channelData) => {
     try {
       const response = await axios.post(
         `http://localhost:9000/api/channels/createchannel`,
-        channelData ,
+        channelData,
         {
           headers: {
             "Content-Type": "application/json",
@@ -92,12 +81,11 @@ export const handleCreateNewChannelAction = createAsyncThunk(
 );
 export const handleFetchAllUSerChannelAction = createAsyncThunk(
   "chat/fetch/channel", // Note: The name should be in "slice/action" format
-  async ( ) => {
-   
+  async () => {
     try {
       const response = await axios.get(
         `http://localhost:9000/api/channels/fetchuserchannels`,
-         
+
         {
           headers: {
             "Content-Type": "application/json",
@@ -114,11 +102,9 @@ export const handleFetchAllUSerChannelAction = createAsyncThunk(
   }
 );
 
-
 export const handleFetchChannelChatsAction = createAsyncThunk(
   "chat/fetch/channel/chats", // Note: The name should be in "slice/action" format
-  async ( channelId) => {
-   
+  async (channelId) => {
     try {
       const response = await axios.get(
         `http://localhost:9000/api/channels/fetchuserchannelmessages`,
@@ -145,33 +131,20 @@ const chatSlice = createSlice({
   initialState,
   reducers: {
     setSelectChatType(state, action) {
-      console.log("====================================");
-      console.log(action.payload, "SELECT CHAT TYPE");
-      console.log("====================================");
       state.selectedChatType = action.payload;
     },
     setSelectChatData(state, action) {
-      console.log("====================================");
-      console.log(action.payload, "SELECT CHAT DATA");
-      console.log("====================================");
       state.selectedChatData = action.payload;
     },
     setChatClose(state, action) {
-      console.log("====================================");
-      console.log(action);
-      console.log("====================================");
       state.selectedChatType = null;
       state.selectedChatData = null;
       state.selectedChatMessages = [];
     },
     setSelectedChatMessages(state, action) {
-      console.log("====================================");
-      console.log(action);
-      console.log("====================================");
       state.selectedChatMessages = action.payload;
     },
     setAddMessage(state, action) {
-      console.log("SETMESSAGE", state, action);
       const selectedChatType = state.selectedChatType;
       const newMessage = action.payload.message;
       state.selectedChatMessages.push({
@@ -188,30 +161,17 @@ const chatSlice = createSlice({
       });
     },
     setSelectedUserDMList(state, action) {
-      console.log("====================================");
-      console.log(action , action.payload);
-      console.log("====================================");
-      state.selectedUserDMList= action.payload;
+      state.selectedUserDMList = action.payload;
     },
     setSelectedUserChannelList(state, action) {
-      console.log("====================================");
-      console.log(action);
-      console.log("====================================");
       state.selectUserChannelList = action.payload;
     },
-    addChannel(state,action){
-      console.log("====================================");
-      console.log(action);
-      console.log("====================================");
+    addChannel(state, action) {
       state.selectUserChannelList.push(action.payload);
-
     },
     setChannelList(state, action) {
-      console.log("====================================");
-      console.log(action);
-      console.log("====================================");
       state.channelList = action.payload;
-      },
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -232,9 +192,6 @@ const chatSlice = createSlice({
         state.state = "loading";
       })
       .addCase(handleCreateNewChannelAction.fulfilled, (state, action) => {
-        console.log('====================================');
-        console.log(action,"JJJJJJJJasasdAsdAD");
-        console.log('====================================');
         state.state = action.payload.status ? "success" : "idle";
         action.payload.status
           ? state.selectedUserChannelList.push(action.payload.channel)
@@ -247,16 +204,10 @@ const chatSlice = createSlice({
         state.state = "loading";
       })
       .addCase(handleFetchAllUSerChannelAction.fulfilled, (state, action) => {
-        console.log('====================================');
-        console.log(action,"KKKKKKKK");
-        console.log('====================================');
         state.state = action.payload.status ? "success" : "idle";
-        if(action.payload.status)
-        {
-          state.selectedUserChannelList = action.payload.channels
+        if (action.payload.status) {
+          state.selectedUserChannelList = action.payload.channels;
         }
-       
-        
       })
       .addCase(handleFetchAllUSerChannelAction.rejected, (state, action) => {
         state.state = "idle";
@@ -265,21 +216,14 @@ const chatSlice = createSlice({
         state.state = "loading";
       })
       .addCase(handleFetchChannelChatsAction.fulfilled, (state, action) => {
-        console.log('====================================');
-        console.log(action,"MMMMMMMM");
-        console.log('====================================');
         state.state = action.payload.status ? "success" : "idle";
-        if(action.payload.status)
-        {
-          state.selectedChatMessages = action.payload.messages
+        if (action.payload.status) {
+          state.selectedChatMessages = action.payload.messages;
         }
-       
-        
       })
       .addCase(handleFetchChannelChatsAction.rejected, (state, action) => {
         state.state = "idle";
-      })
-      
+      });
   },
 });
 
@@ -293,6 +237,6 @@ export const {
   setSelectedUserChannelList,
   setSelectedUserDMList,
   setChannelList,
-  addChannel
+  addChannel,
 } = chatSlice.actions;
 export default chatSlice.reducer;
