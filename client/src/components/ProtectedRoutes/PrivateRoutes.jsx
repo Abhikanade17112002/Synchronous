@@ -1,32 +1,22 @@
-import { getUser } from '@/store/userSlice/userSlice';
-import React from 'react'
-import { useSelector } from 'react-redux';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { getUser } from "@/store/userSlice/userSlice";
+import React from "react";
+import { useSelector } from "react-redux";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 
-const PrivateRoutes = ({children}) => {
-    const location = useLocation();
-    
-    const isAuthenticated = useSelector((state)=>state.user.authenticated) ;
-    const userInfo = useSelector(getUser);
+const PrivateRoutes = ({ children }) => {
+  const location = useLocation();
 
-    
-     
-    if( !userInfo?.profilesetup)
-    {
-        
-        return <Navigate to={"/profile"}></Navigate>
-        
-    }
-   if( isAuthenticated && location.pathname.includes("/auth"))
-    {
-        return <Navigate to={"/chat"}></Navigate>
-    }
-    
-     
-        return children ;
+  const isAuthenticated = useSelector((state) => state.user.authenticated);
+  const userInfo = useSelector(getUser);
 
-    
-   
-}
+  if (!userInfo?.profilesetup) {
+    return <Navigate to={"/profile"}></Navigate>;
+  }
+  if (isAuthenticated && location.pathname.includes("/auth")) {
+    return <Navigate to={"/chat"}></Navigate>;
+  }
 
-export default PrivateRoutes ;
+  return children;
+};
+
+export default PrivateRoutes;

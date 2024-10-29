@@ -36,17 +36,17 @@ const ContactsContainer = () => {
     getContacts() ;
   },[])
   return (
-    <div className='relative   md:w-[35vw] lg:w-[30vw] xl:w-[20vw] bg-[#1b1c24] border-r-2 border-gray-500 w-full' >
-           <div className="pt3 mt2">
+    <div className='relative  h-[100vh]  md:w-[35vw] lg:w-[30vw] xl:w-[20vw] bg-[#1b1c24] border-r-2 border-gray-500 w-full' >
+           <div className="pt-3 mt-2">
             <Logo/>
            
            </div>
            <div className="my-5 ">
-            <div className="flex items-center justify-between  pr-10">
-              <Title text={"Direct  Messages"} />
+            <div className="flex items-center justify-between   pr-10">
+              <Title text={"Direct  Messages"}  />
               < NewDm />
             </div>
-            <div className="max-h-[38vh] overflow-y-auto scrollbar-hidden">
+            <div className=" py-2  h-[30vh]  overflow-y-auto no-scrollbar">
               <ContactList isChannel={false}/>
             </div>
            </div>
@@ -55,12 +55,12 @@ const ContactsContainer = () => {
               <Title text={"Channels"} />
               <CreateChannel />
             </div>
-            <div className="max-h-[38vh] overflow-y-auto scrollbar-hidden">
-              <GroupList isChannel={true}/>
+            <div  className="py-5 max-h-[40vh] overflow-y-auto no-scrollbar">
+              <GroupList  isChannel={true}/>
             </div>
            </div>
            <ProfileInfo />
-      ContactsContainer
+      
     </div>
   )
 }

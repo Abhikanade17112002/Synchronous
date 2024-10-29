@@ -8,9 +8,7 @@ const handleGetMessages = async (request,response) =>{
     try {
         const { reciver  } = request.body ;
         const sender = request.userId ;
-        console.log('====================================');
-        console.log(sender,reciver,request.body , "SENDERRECIVER");
-        console.log('====================================');
+
         if(!sender || !reciver )
         {
             return response.json({message : "sender and reciver id required " ,status:200});
@@ -30,17 +28,15 @@ const handleGetMessages = async (request,response) =>{
             status:200
         })
     } catch (error) {
-        console.log('====================================');
+      
         console.log("SOMETHING WENT WRONG IN SEARCH CONATCTS");
-        console.log('====================================');
+     
     }
 }
 
 const handleUploadFile = async ( request , response ) =>{
     try {
-        console.log('====================================');
-        console.log(request.file,"FILE");
-        console.log('====================================');
+
         const  filePath = request.file ;
 
         if( filePath )
@@ -62,9 +58,9 @@ const handleUploadFile = async ( request , response ) =>{
         }
         
     } catch (error) {
-        console.log('====================================');
+
         console.log("SOMETHING WENT WRONG IN UPLOAD CHAT FILE",error);
-        console.log('====================================');
+
     }
 }
 

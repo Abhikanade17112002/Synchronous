@@ -39,7 +39,7 @@ const GroupList = ({ isChannel = false }) => {
         
         <div
         
-          className={`pl-10 py-2 flex gap-5 transition-all duration-300 cursor-pointer ${
+          className={`pl-10 py-5 flex gap-5 transition-all duration-300 cursor-pointer ${
             selectedChatData && selectedChatData._id === contact._id
               ? "bg-[#8417ff] hover:bg-[#8417ff]"
               : "hover:bg-[#f1f1f111]"
@@ -55,7 +55,7 @@ const GroupList = ({ isChannel = false }) => {
             </div>
           )}
           {isChannel ? (
-            <div className="flex flex-col text-sm items-center justify-center ">
+            <div className="flex flex-col md:text-sm text-[10px]  items-center justify-center ">
             <div className="w-full flex items-center justify-center ">
               {contact.name 
                 ? `${contact.name}  `
@@ -63,7 +63,7 @@ const GroupList = ({ isChannel = false }) => {
             </div>
           </div>
           ) : (
-            <div className="flex flex-col text-sm items-center justify-center ">
+            <div className="flex flex-col md:text-sm text-[10px] items-center justify-center ">
               <div className="w-full flex items-center justify-center ">
                 {contact.name 
                   ? `${contact.name}  `

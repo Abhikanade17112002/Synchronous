@@ -16,8 +16,8 @@ const ChatHeader = () => {
     dispatch(setChatClose());
   };
   return (
-    <div className="h-[10vh] border-b-2 border-[#2f303b] px-20 flex items-center justify-between ">
-      <div className="flex gap-5 items-center">
+    <div className="md:h-[10vh] h-[8vh] border-b-2 border-[#2f303b] px-5 w-full md:px-20 flex items-center justify-between ">
+      <div className="flex gap-5 items-center w-full justify-between">
         <div className="flex gap-3 items-center justify-center">
           <div className="h-8 w-8  relative ">
             {selectedChatType === "contact" ? (
@@ -47,7 +47,7 @@ const ChatHeader = () => {
               <div className="w-full"></div>
             )}
           </div>
-          <div className="flex flex-col text-sm items-center w-full ">
+          <div className="flex flex-col md:text-sm text-[10px] items-center w-full ">
             {selectedChatType === "contact" ? (
               <>
                 <div className="w-full">
@@ -63,7 +63,7 @@ const ChatHeader = () => {
                 </div>
               </>
             ) : (
-              <div className="w-full text-2xl font-bold flex gap-5 justify-center items-center"><div> <div
+              <div className="w-full md:text-sm text-[10px] font-bold flex gap-5 justify-center items-center"><div> <div
               className={`bg-[#ffffff22] h-10 w-10 flex items-center justify-center  rounded-full`}
             >
               #

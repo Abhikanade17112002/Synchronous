@@ -1,32 +1,33 @@
-import CustomInput from '@/components/CustomInput/CustomInput'
-import { Button } from '@/components/ui/button'
-import { handleUserSignUpAction } from '@/store/userSlice/userSlice'
-import React, { useState } from 'react'
-import {  useForm } from 'react-hook-form'
-import { useDispatch } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
-import { toast } from 'sonner'
+import CustomInput from "@/components/CustomInput/CustomInput";
+import { Button } from "@/components/ui/button";
+import { handleUserSignUpAction } from "@/store/userSlice/userSlice";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
-const SignUpForm = ({setCurrentTab}) => {
-  const navigate = useNavigate() ;
-  const dispatch = useDispatch() ;
-  const [ submitting , setSubmitting ] = useState(false) ;
-  const { register, handleSubmit, formState:{errors} } = useForm({
+const SignUpForm = ({ setCurrentTab }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [submitting, setSubmitting] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
-      email: '',
-      username:"",
-      password: ''
-      }
-      ,
-      mode:"all"
-  })
-  
-  const handleUserSignUp = async(data) =>{
+      email: "",
+      username: "",
+      password: "",
+    },
+    mode: "all",
+  });
+
+  const handleUserSignUp = async (data) => {
     try {
       const response = await dispatch(handleUserSignUpAction(data));
-      console.log('====================================');
-      console.log(response,"Response");
-      console.log('====================================');
+
       if (response.payload.status) {
         toast.success(response.payload.message);
         setSubmitting(false);
@@ -39,12 +40,15 @@ const SignUpForm = ({setCurrentTab}) => {
       console.log(error);
       setSubmitting(false);
     }
-  } ;
-  
+  };
 
   return (
-    <div className='w-full flex flex-col justify-center items-center  my-5 '>
-      <form action="" className='w-full px-8' onSubmit={handleSubmit(handleUserSignUp)}  >
+    <div className="w-full flex flex-col justify-center items-center  my-5 ">
+      <form
+        action=""
+        className="w-full md:px-8 "
+        onSubmit={handleSubmit(handleUserSignUp)}
+      >
         <CustomInput
           label="Username"
           type="text"
@@ -61,8 +65,8 @@ const SignUpForm = ({setCurrentTab}) => {
               message: "enter a username ",
             },
           })}
-         />
-         <CustomInput
+        />
+        <CustomInput
           label="Email"
           type="email"
           name="email"
@@ -78,8 +82,8 @@ const SignUpForm = ({setCurrentTab}) => {
               message: "enter a valid email",
             },
           })}
-         />
-           <CustomInput
+        />
+        <CustomInput
           label="password"
           type="password"
           name="password"
@@ -96,18 +100,32 @@ const SignUpForm = ({setCurrentTab}) => {
               message: "enter a strong password",
             },
           })}
-         />
-         <div className="my-5 flex justify-center flex-col items-center">
-         <Button className="w-1/3"    disable={submitting}   type="submit" > {submitting? "submitting ..." : "Sign Up"} </Button>
-         <div className="text-center my-5">
-          <p className='text-[8px] font-bold text-zinc-700 ' > Already  have an account ? <span className='text-blue-700'><Link to="/auth"  onClick={()=>setCurrentTab("signin")}  > Sign In </Link></span> </p>
-         </div>
-         </div>
-         
+        />
+        <div className="my-5 flex justify-center flex-col items-center">
+          <Button
+            className="md:w-1/3 w-full"
+            disable={submitting}
+            type="submit"
+          >
+            {" "}
+            {submitting ? "submitting ..." : "Sign Up"}{" "}
+          </Button>
+          <div className="text-center my-5">
+            <p className="text-[8px] font-bold text-zinc-700 ">
+              {" "}
+              Already have an account ?{" "}
+              <span className="text-blue-700">
+                <Link to="/auth" onClick={() => setCurrentTab("signin")}>
+                  {" "}
+                  Sign In{" "}
+                </Link>
+              </span>{" "}
+            </p>
+          </div>
+        </div>
       </form>
-
     </div>
-  )
-}
+  );
+};
 
-export default SignUpForm
+export default SignUpForm;
