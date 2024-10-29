@@ -16,7 +16,7 @@ export const handleFetchAllDMMessages = createAsyncThunk(
   async (reciver) => {
     try {
       const response = await axios.post(
-        `https://synchronous-2.onrender.com/api/messages/get`,
+        `https://synchronous.onrender.com/api/messages/get`,
         { reciver },
         {
           headers: {
@@ -39,7 +39,7 @@ export const handleUploadChatFile = createAsyncThunk(
   async (formData) => {
     try {
       const response = await axios.post(
-        `https://synchronous-2.onrender.com/api/messages/upload`,
+        `https://synchronous.onrender.com/api/messages/upload`,
         formData,
         {
           headers: {
@@ -62,7 +62,7 @@ export const handleCreateNewChannelAction = createAsyncThunk(
   async (channelData) => {
     try {
       const response = await axios.post(
-        `https://synchronous-2.onrender.com/api/channels/createchannel`,
+        `https://synchronous.onrender.com/api/channels/createchannel`,
         channelData,
         {
           headers: {
@@ -84,7 +84,7 @@ export const handleFetchAllUSerChannelAction = createAsyncThunk(
   async () => {
     try {
       const response = await axios.get(
-        `https://synchronous-2.onrender.com/api/channels/fetchuserchannels`,
+        `https://synchronous.onrender.com/api/channels/fetchuserchannels`,
 
         {
           headers: {
@@ -107,7 +107,7 @@ export const handleFetchChannelChatsAction = createAsyncThunk(
   async (channelId) => {
     try {
       const response = await axios.get(
-        `https://synchronous-2.onrender.com/api/channels/fetchuserchannelmessages`,
+        `https://synchronous.onrender.com/api/channels/fetchuserchannelmessages`,
         {
           headers: {
             "Content-Type": "application/json",
