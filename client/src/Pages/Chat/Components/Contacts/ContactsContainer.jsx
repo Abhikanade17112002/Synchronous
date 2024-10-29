@@ -17,7 +17,7 @@ const ContactsContainer = () => {
   useEffect(()=>{
     const getContacts = async () =>{
       try {
-        const response = await axios.get("http://localhost:9000/api/contacts/getdmlist",{
+        const response = await axios.get("https://synchronous.onrender.com/api/contacts/getdmlist",{
           withCredentials:true
         })
         const channelsResponse = await dispatch(handleFetchAllUSerChannelAction());
