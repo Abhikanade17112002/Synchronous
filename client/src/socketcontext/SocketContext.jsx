@@ -29,7 +29,7 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     if (userInfo) {
-      socket.current = io.connect("https://synchronous-2.onrender.com", {
+      socket.current = io.connect("https://synchronous.onrender.com", {
         query: { userId: userInfo._id },
         withCredentials: true,
       });
