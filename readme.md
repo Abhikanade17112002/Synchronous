@@ -81,7 +81,7 @@ project-name/
 | ![Screenshot 1](https://github.com/Abhikanade17112002/Synchronous/tree/main/client/src/assets/SynchronousProfile.png) | ![Screenshot 2](https://github.com/Abhikanade17112002/Synchronous/tree/main/client/src/assets/SynchronousHome.png) | ![Screenshot 3](https://github.com/Abhikanade17112002/Synchronous/tree/main/client/src/assets/SynchronousGroupChat.png) |
 | ![Screenshot 4](https://github.com/Abhikanade17112002/Synchronous/tree/main/client/src/assets/SynchronousChat.png) | ![Screenshot 5](https://github.com/Abhikanade17112002/Synchronous/tree/main/client/src/assets/SignUp.png) | |
 
-> _Replace `path/to/screenshotX.png` with the actual paths to your screenshots._
+
 
 ---
 
