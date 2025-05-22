@@ -9,6 +9,9 @@ const handleGetMessages = async (request,response) =>{
         const { reciver  } = request.body ;
         const sender = request.userId ;
 
+        console.log(reciver,sender,"HERE");
+        
+
         if(!sender || !reciver )
         {
             return response.json({message : "sender and reciver id required " ,status:200});

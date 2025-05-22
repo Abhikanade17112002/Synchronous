@@ -35,9 +35,9 @@ connectToDatabase()
     App.use("/api/contacts", ContactsRouter);
     App.use("/api/messages", MessagesRouter);
     App.use("/api/channels", channelRouter);
-    App.use(express.static(path.join(__dirname,"/client/dist")));
+    App.use(express.static(path.join(__dirname,"..//client/dist")));
     App.get("*", (request, response) => {
-      response.sendFile(path.join(__dirname,"/client/dist/index.html"));
+      response.sendFile(path.join(__dirname,"../client/dist/index.html"));
     })
     App.get("/", (request, response) => {
       response.send("Hello World");
